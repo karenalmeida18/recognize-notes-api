@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response
+from flask import request, jsonify, make_response
 import torch
 from PIL import Image
 from utils import train_transform, class_list, load_model_trained

@@ -1,0 +1,4 @@
+flask
+PIL
+boto3
+torchvision
