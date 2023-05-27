@@ -2,15 +2,14 @@ from flask import Flask, request, jsonify, make_response
 import torch
 from PIL import Image
 from utils import train_transform, class_list, load_model_trained
+from app import app
 
-app = Flask(__name__)
+model = load_model_trained()
+model.eval()
 
 @app.route('/recognize-banknotes', methods=['POST'])
 def recognize_banknotes():
     try:
-        model = load_model_trained()
-        model.eval()
-
         if ('image' not in request.files):
             return make_response(jsonify({ 'message': 'image file is required'}), 400)
 
@@ -28,7 +27,8 @@ def recognize_banknotes():
         pred_class = probs.argmax().item()
         class_name = class_list[pred_class]
         return make_response(jsonify({'message': 'Success in recognize image', 'data': { 'class': class_name } }), 200)
-    except:
+    except Exception as e:
+        print(e)
         return make_response(jsonify({ 'message': 'Internal server error'}), 500)
-
+    
 app.run(debug=True, host='localhost', port=3030)
