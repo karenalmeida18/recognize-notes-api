@@ -1,4 +1,5 @@
-flask
-PIL
-boto3
-torchvision
+flask=2.1.2
+pillow=9.5.0
+boto3=1.26.142
+torchvision=0.15.1
+torch=2.0.0
