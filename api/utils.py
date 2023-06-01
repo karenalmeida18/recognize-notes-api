@@ -23,13 +23,15 @@ train_transform = transforms.Compose([
 ])
 
 def load_model_trained():
-    model_path = 'models/model.pt'    
+    model_path = 'models/model.pt'
+    model = models.vgg16_bn(pretrained=True)
+    
     # Carrega o modelo pretreinado - sequeezenet
     model = models.squeezenet1_1(pretrained=True)
     # Fine tunning - Subtitui a camada de classificação (última)
+    print(model)
     # Fine tunning - Subtitui a camada de classificação (última)
-    num_input = list(model.children())[-1][-1].in_features # 4096 -> Ultimo elemento da ultima camada da rede (classifier)
-    model.classifier[1] = nn.Conv2d(512, num_input, kernel_size=(1, 1))
+    model.classifier[1] = nn.Conv2d(512, len(class_list), kernel_size=(1, 1))
 
     model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     return model
