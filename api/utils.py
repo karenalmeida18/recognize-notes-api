@@ -2,13 +2,15 @@ import torch
 from torchvision import transforms, models
 from torch import nn
 import boto3
-from app import app
+
+AWS_SECRET_ACCESS_KEY = 'eEKTFuYdb7yMI5ucC14B4dl3KgeFxj0442WxxWJj'
+AWS_ACCESS_KEY_ID = 'AKIASEHZLSSODJSWRLUZ'
 
 def get_file_from_s3(bucket_name, file_key, local_path):
     s3 = boto3.client(
         's3',
-        aws_access_key_id= app.config['AWS_ACCESS_KEY_ID'],
-        aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY'],
+        aws_access_key_id=  AWS_ACCESS_KEY_ID,
+        aws_secret_access_key= AWS_SECRET_ACCESS_KEY,
     )
     s3.download_file(bucket_name, file_key, local_path)
 
