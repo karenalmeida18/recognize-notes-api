@@ -1,18 +1,18 @@
 import torch
 from torchvision import transforms, models
 from torch import nn
-import boto3
+# import boto3
 
-AWS_SECRET_ACCESS_KEY = 'eEKTFuYdb7yMI5ucC14B4dl3KgeFxj0442WxxWJj'
-AWS_ACCESS_KEY_ID = 'AKIASEHZLSSODJSWRLUZ'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_ACCESS_KEY_ID = 'AKIASEHZLSSODJSWRLUZ'
 
-def get_file_from_s3(bucket_name, file_key, local_path):
-    s3 = boto3.client(
-        's3',
-        aws_access_key_id=  AWS_ACCESS_KEY_ID,
-        aws_secret_access_key= AWS_SECRET_ACCESS_KEY,
-    )
-    s3.download_file(bucket_name, file_key, local_path)
+# def get_file_from_s3(bucket_name, file_key, local_path):
+#     s3 = boto3.client(
+#         's3',
+#         aws_access_key_id=  AWS_ACCESS_KEY_ID,
+#         aws_secret_access_key= AWS_SECRET_ACCESS_KEY,
+#     )
+#     s3.download_file(bucket_name, file_key, local_path)
 
 class_list = ['nota-10', 'nota-2', 'nota-20', 'nota-200', 'nota-5', 'nota-50', 'nota-100']
 
@@ -26,7 +26,6 @@ train_transform = transforms.Compose([
 
 def load_model_trained():
     model_path = 'models/my-model.pt'
-    get_file_from_s3('model-recognize-notes', 'squeezeNet-32.pt', model_path)            
     # Carrega o modelo pretreinado - sequeezenet
     model = models.squeezenet1_1(pretrained=True)
     # Fine tunning - Subtitui a camada de classificação (última)
