@@ -30,6 +30,6 @@ def load_model_trained():
     model = models.squeezenet1_1(pretrained=True)
     # Fine tunning - Subtitui a camada de classificação (última)
     model.classifier[1] = nn.Conv2d(512, len(class_list), kernel_size=(1, 1))
-
-    model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.load_state_dict(torch.load(model_path, map_location=torch.device(device)))
     return model
