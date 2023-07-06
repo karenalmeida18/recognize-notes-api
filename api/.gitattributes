@@ -1,0 +1,2 @@
+modelo.py filter=lfs diff=lfs merge=lfs -text
+my-model.py filter=lfs diff=lfs merge=lfs -text

@@ -38,4 +38,4 @@ def recognize_banknotes():
         return make_response(jsonify({ 'message': 'Internal server error'}), 500)
     
 if __name__ == '__main__':
-    app.run(host='192.168.2.104', port=1900)
+    app.run()
