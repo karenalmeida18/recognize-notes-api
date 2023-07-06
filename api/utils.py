@@ -25,7 +25,7 @@ train_transform = transforms.Compose([
 ])
 
 def load_model_trained():
-    model_path = 'models/my-model.pt'
+    model_path = 'model.pt'
     # Carrega o modelo pretreinado - sequeezenet
     model = models.squeezenet1_1(pretrained=True)
     # Fine tunning - Subtitui a camada de classificação (última)
