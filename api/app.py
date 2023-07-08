@@ -13,13 +13,10 @@ model.eval()
 @app.route('/recognize-banknotes', methods=['POST'])
 def recognize_banknotes():
     try:
-        print(request);
-        print(request.files)
         if ('image' not in request.files):
             return make_response(jsonify({ 'message': 'image file is required'}), 400)
 
         image_event = request.files['image']
-        print(image_event)
         image_opened = Image.open(image_event)
         # Transform image to tensor and apply transforms
         image_tensor = train_transform(image_opened)
