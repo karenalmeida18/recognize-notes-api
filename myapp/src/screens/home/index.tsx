@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { View, TouchableOpacity, Text, ActivityIndicator } from 'react-native'
 import axios from 'axios'
 import Toast from 'react-native-toast-message'
+import { GestureDetector, Gesture } from 'react-native-gesture-handler'
 import { Camera, CameraCapturedPicture } from 'expo-camera'
 import * as Speech from 'expo-speech'
 import Popup from '../../components/popup'
 
-import { styles } from './styles'
+import { styles } from './styles';
 
 export function Home() {
-  const [permission, requestPermission] = Camera.useCameraPermissions()
+  const [permission] = Camera.useCameraPermissions()
   const [camera, setCamera] = useState<Camera | null>(null)
   const [capturedImage, setCapturedImage] = useState<CameraCapturedPicture>()
   const [imageResult, setImageResult] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const showToast = (text: string, type = 'success') => Toast.show({ text1: text, type, topOffset: 200 })
   const speakText = (text: string) => Speech.speak(text, { language: 'pt-BR' })
@@ -22,17 +23,10 @@ export function Home() {
     return `Nota ${noteNumber} reconhecida`
   }
 
-  useEffect(() => {
-    const verifyPermission = async () => {
-      await requestPermission();
-      if (!permission?.granted) console.log('Permissão negada para usar a câmera');
-    }
-
-    verifyPermission()
-  }, [])
-
   const handleCameraCapture = async () => {
-    setLoading(true)
+    setImageResult('');
+    setLoading(true);
+    speakText('Aguarde um momento, o resultado está sendo processado');
     try {
       if (camera) {
         const image = await camera.takePictureAsync()
@@ -59,6 +53,7 @@ export function Home() {
         speakText(resultFormatted)
       }
     } catch (err) {
+      console.log({ err });
       const text = 'Ocorreu um erro inesperado. Tente novamente';
       showToast(text, 'error')
       speakText(text)
@@ -67,8 +62,10 @@ export function Home() {
     }
   }
 
+  const handleGesture = Gesture.Tap().numberOfTaps(2).onStart(() => handleCameraCapture());
+
   return (
-    <View style={styles.container} accessibilityLanguage="pt-BR">
+    <View style={styles.container} accessibilityLanguage="pt-BR" accessible={true}>
       {imageResult && (
         <Popup text={imageResult} onPress={() => setImageResult('')} />
       )}
@@ -76,15 +73,21 @@ export function Home() {
         <ActivityIndicator
           style={styles.resultText}
           size="large"
+          accessibilityRole="progressbar"
+          accessibilityLabel="Aguarde um momento, o resultado está sendo processado"
           color="#1094ab"
         />
       )}
       {permission?.granted && (
-        <Camera style={styles.camera} ref={(ref) => ref && setCamera(ref)} />
+        <GestureDetector gesture={handleGesture}>
+          <Camera style={styles.camera} ref={(ref) => ref && setCamera(ref)} />
+        </GestureDetector>
       )}
       <View style={styles.buttonWrapper}>
         <TouchableOpacity
           accessible={true}
+          disabled={loading}
+          aria-disabled={loading}
           accessibilityLabel="Aperte o botao para capturar a nota"
           onPress={handleCameraCapture}
           style={styles.button}
